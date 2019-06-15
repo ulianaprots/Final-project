@@ -1,0 +1,38 @@
+---
+title: "project"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(readr)
+opendata <- read_csv("C:/Datavisualisation/project/opendata.csv")
+
+View(assessment)
+```
+
+```{r}
+
+delivery_s <- opendata %>% select(company_name, 	delivery_address)
+
+delivery_fs <- delivery_s %>% group_by(delivery_address) %>% summarise(c=n())
+
+delivery_fss <- delivery_fs[order(-delivery_fs$count),]
+
+View(delivery_fss)
+```
+
+<h1>У яких містаї відкривались доставки найбільше?</h1>
+
+На цьому графіку видно, що доставки найбільше відкривались у великих містах. Найбільше у місті Києві.
+
+```{r}
+#install.packages("ggplot2")
+library(ggplot2)
+ggplot(delivery_fss, aes(x=reorder(delivery_address, -c), y=c)) +
+  geom_bar(stat="identity", fill="blue") + 
+  xlab("Найменування міста") +
+  ylab("Кількість доставок відкритих в місті") +
+  coord_flip()
+
+```
